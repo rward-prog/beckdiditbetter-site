@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beck Did It Better — Comedy Podcast Radio</title>
+  <meta name="description" content="A comedy podcast where we discuss the top 500 albums of all time as decided by Rolling Stone magazine. Stream all 300+ episodes in random order." />
+  <meta property="og:title" content="Beck Did It Better" />
+  <meta property="og:description" content="Comedy podcast about the Rolling Stone top 500 albums. Live radio stream." />
+  <meta property="og:image" content="https://pbcdn1.podbean.com/imglogo/image-logo/9118956/Podcast_cover_last_version_JPEG8yd69.jpg" />
+  <link rel="icon" href="https://pbcdn1.podbean.com/imglogo/image-logo/9118956/Podcast_cover_last_version_JPEG8yd69.jpg" type="image/jpeg" />
+
+  <style>
+    /* ── Brand tokens ───────────────────────────────────────────────────── */
+    :root {
+      --navy:    #1e1b6a;
+      --navy-dk: #13114a;
+      --navy-lt: #2d2a8a;
+      --orange:  #f04620;
+      --orange-lt: #ff6a47;
+      --white:   #ffffff;
+      --off-white: #f5f4ff;
+      --text-dim: rgba(255,255,255,0.6);
+    }
+
+    /* ── Reset ──────────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy-dk);
+      color: var(--white);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Header ─────────────────────────────────────────────────────────── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: var(--navy-dk);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: var(--white);
+    }
+    .logo-row img {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    .logo-row span {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+    .logo-row em {
+      font-style: normal;
+      color: var(--orange);
+    }
+
+    nav { display: flex; gap: 28px; align-items: center; }
+    nav a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color .15s;
+    }
+    nav a:hover { color: var(--white); }
+    nav a.btn {
+      background: var(--orange);
+      color: var(--white);
+      padding: 8px 18px;
+      border-radius: 100px;
+      font-size: 13px;
+    }
+    nav a.btn:hover { background: var(--orange-lt); }
+
+    /* ── Hero ───────────────────────────────────────────────────────────── */
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 64px;
+      padding: 80px 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .hero-art {
+      flex-shrink: 0;
+      position: relative;
+    }
+    .hero-art img {
+      width: 300px;
+      height: 300px;
+      border-radius: 16px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+      display: block;
+    }
+    .live-badge {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: var(--orange);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 5px 10px;
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: white;
+      animation: blink 1.4s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+    .hero-text h1 {
+      font-size: clamp(36px, 5vw, 58px);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      margin-bottom: 8px;
+    }
+    .hero-text h1 span { color: var(--orange); }
+
+    .hero-tagline {
+      font-size: 16px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      max-width: 440px;
+      margin-bottom: 36px;
+    }
+    .hero-tagline strong { color: var(--white); }
+
+    /* ── Player card ────────────────────────────────────────────────────── */
+    .player-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 24px 28px;
+      max-width: 460px;
+    }
+
+    .now-playing-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .np-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--orange);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .np-label { font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; }
+    .np-title {
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 300px;
+    }
+
+    .controls-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .play-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: none;
+      background: var(--orange);
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .12s, background .15s;
+      flex-shrink: 0;
+    }
+    .play-btn:hover { background: var(--orange-lt); transform: scale(1.05); }
+    .play-btn:active { transform: scale(0.96); }
+
+    .vol-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+    .vol-icon { color: var(--text-dim); font-size: 15px; }
+    input[type=range] {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.15);
+      cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--orange);
+    }
+
+    .status-line {
+      font-size: 12px;
+      color: var(--text-dim);
+      text-align: center;
+      min-height: 18px;
+    }
+    .status-line.err { color: #ff6b6b; }
+
+    /* ── Subscribe strip ────────────────────────────────────────────────── */
+    .subscribe {
+      background: rgba(255,255,255,0.04);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      padding: 32px 40px;
+      text-align: center;
+    }
+    .subscribe p {
+      font-size: 13px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 20px;
+    }
+    .platform-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+    .platform-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--white);
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background .15s, border-color .15s;
+    }
+    .platform-links a:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.25);
+    }
+
+    /* ── About ──────────────────────────────────────────────────────────── */
+    .about {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 72px 40px;
+      text-align: center;
+    }
+    .about h2 {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+    .about h2 span { color: var(--orange); }
+    .about p {
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--text-dim);
+    }
+    .stat-row {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 40px;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-size: 40px;
+      font-weight: 900;
+      color: var(--orange);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+
+    /* ── Orange bar footer ──────────────────────────────────────────────── */
+    footer {
+      background: var(--orange);
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    footer span { font-size: 13px; font-weight: 700; color: white; }
+    footer a { color: white; font-size: 13px; }
+
+    /* ── Responsive ─────────────────────────────────────────────────────── */
+    @media (max-width: 720px) {
+      .hero { flex-direction: column; align-items: flex-start; padding: 48px 24px; gap: 36px; }
+      .hero-art img { width: 220px; height: 220px; }
+      header { padding: 16px 24px; }
+      nav a:not(.btn) { display: none; }
+      .stat-row { gap: 28px; }
+      footer { padding: 20px 24px; }
+      .about { padding: 48px 24px; }
+      .subscribe { padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────────────── -->
+<header>
+  <a class="logo-row" href="/">
+    <img src="https://pbcdn1.podbean.com/imglogo/image-logo/9118956/Podcast_cover_last_version_JPEG8yd69.jpg" alt="Beck Did It Better logo" />
+    <span>BECK DID IT<br><em>BETTER</em></span>
+  </a>
+  <nav>
+    <a href="#about">About</a>
+    <a href="https://beckdiditbetter.podbean.com" target="_blank" rel="noopener">Episodes</a>
+    <a class="btn" href="#player">▶ Listen Live</a>
+  </nav>
+</header>
+
+<!-- ── Hero ────────────────────────────────────────────────────────────── -->
+<section class="hero" id="player">
+  <div class="hero-art">
+    <img src="https://pbcdn1.podbean.com/imglogo/image-logo/9118956/Podcast_cover_last_version_JPEG8yd69.jpg" alt="Beck Did It Better podcast cover" />
+    <div class="live-badge"><div class="live-dot"></div> LIVE</div>
+  </div>
+
+  <div class="hero-text">
+    <h1>BECK DID IT<br><span>BETTER</span></h1>
+    <p class="hero-tagline">
+      <strong>Comedy podcast</strong> — all 300+ episodes shuffled and streaming live, 24/7.
+      Rolling Stone's top 500 albums reviewed by two people who definitely know what they're talking about.
+    </p>
+
+    <div class="player-card">
+      <div class="now-playing-row">
+        <div class="np-icon">🎵</div>
+        <div>
+          <div class="np-label">Now Playing</div>
+          <div class="np-title" id="np-title">Press play to tune in</div>
+        </div>
+      </div>
+
+      <div class="controls-row">
+        <button class="play-btn" id="play-btn" title="Play / Pause">▶</button>
+        <div class="vol-row">
+          <span class="vol-icon">🔈</span>
+          <input type="range" id="volume" min="0" max="1" step="0.02" value="0.85" />
+          <span class="vol-icon">🔊</span>
+        </div>
+      </div>
+
+      <div class="status-line" id="status-line">All 300+ episodes · random shuffle · never stops</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Subscribe ───────────────────────────────────────────────────────── -->
+<div class="subscribe">
+  <p>Subscribe &amp; listen wherever you get podcasts</p>
+  <div class="platform-links">
+    <a href="https://beckdiditbetter.podbean.com" target="_blank" rel="noopener">🎙️ Podbean</a>
+    <a href="https://open.spotify.com/show/beckdiditbetter" target="_blank" rel="noopener">🎧 Spotify</a>
+    <a href="https://podcasts.apple.com/search?term=beck+did+it+better" target="_blank" rel="noopener">🍎 Apple Podcasts</a>
+    <a href="https://feed.podbean.com/beckdiditbetter/feed.xml" target="_blank" rel="noopener">📡 RSS Feed</a>
+  </div>
+</div>
+
+<!-- ── About ───────────────────────────────────────────────────────────── -->
+<section class="about" id="about">
+  <h2>WHAT IS <span>THIS?</span></h2>
+  <p>
+    Beck Did It Better is a comedy podcast where we work through the Rolling Stone
+    magazine Top 500 Albums of All Time — and we are <em>definitely</em> experts.
+    We don't know the Beatles from the Beach Boys, but we are here to talk about it anyway.
+    Call or text the Beck Line: <strong>802-277-BECK</strong>.
+  </p>
+  <div class="stat-row">
+    <div class="stat">
+      <div class="stat-num">300+</div>
+      <div class="stat-label">Episodes</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">500</div>
+      <div class="stat-label">Albums</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">24/7</div>
+      <div class="stat-label">Stream</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ──────────────────────────────────────────────────────────── -->
+<footer>
+  <span>BECK DID IT BETTER</span>
+  <a href="https://beckdiditbetter.podbean.com" target="_blank" rel="noopener">beckdiditbetter.podbean.com</a>
+</footer>
+
+<!-- ── Player script ───────────────────────────────────────────────────── -->
+<script>
+  // ── Config ─────────────────────────────────────────────────────────────
+  // After setting up port-forwarding on your router, replace this with
+  // your public IP or domain, e.g. "http://stream.beckdiditbetter.com:8000"
+  const STREAM_URL    = "http://" + (window.STREAM_HOST || "192.168.0.171") + ":8000/stream";
+  const ICECAST_JSON  = "http://" + (window.STREAM_HOST || "192.168.0.171") + ":8000/status-json.xsl";
+  const POLL_MS       = 9000;
+
+  // ── Elements ────────────────────────────────────────────────────────────
+  const audio    = new Audio();
+  audio.preload  = "none";
+  const playBtn  = document.getElementById("play-btn");
+  const npTitle  = document.getElementById("np-title");
+  const statusEl = document.getElementById("status-line");
+  const volSlider = document.getElementById("volume");
+  const liveBadge = document.querySelector(".live-badge");
+
+  let playing = false;
+  let pollTimer = null;
+  audio.volume = parseFloat(volSlider.value);
+
+  // ── Controls ────────────────────────────────────────────────────────────
+  playBtn.addEventListener("click", () => playing ? stop() : start());
+  volSlider.addEventListener("input", () => { audio.volume = parseFloat(volSlider.value); });
+
+  function start() {
+    audio.src = STREAM_URL + "?t=" + Date.now();
+    audio.play()
+      .then(() => {
+        playing = true;
+        playBtn.textContent = "⏸";
+        liveBadge.style.background = "var(--orange)";
+        setStatus("Connected · all episodes shuffled");
+        fetchNP();
+        pollTimer = setInterval(fetchNP, POLL_MS);
+      })
+      .catch(() => setStatus("Could not connect — check stream is running.", true));
+  }
+
+  function stop() {
+    audio.pause();
+    audio.src = "";
+    playing = false;
+    playBtn.textContent = "▶";
+    clearInterval(pollTimer);
+    npTitle.textContent = "Press play to tune in";
+    setStatus("All 300+ episodes · random shuffle · never stops");
+  }
+
+  audio.addEventListener("error", () => {
+    if (!playing) return;
+    setStatus("Stream dropped — reconnecting in 5 s…", true);
+    stop();
+    setTimeout(start, 5000);
+  });
+
+  function setStatus(msg, isErr = false) {
+    statusEl.textContent = msg;
+    statusEl.className = "status-line" + (isErr ? " err" : "");
+  }
+
+  // ── Now-playing poll ────────────────────────────────────────────────────
+  async function fetchNP() {
+    try {
+      const res  = await fetch(ICECAST_JSON);
+      const data = await res.json();
+      const src  = data?.icestats?.source;
+      if (!src) return;
+      const mount = Array.isArray(src) ? src.find(s => s.listenurl?.includes("/stream")) : src;
+      if (!mount) return;
+      const title = mount.title || mount.song || "";
+      if (title) npTitle.textContent = title;
+      const n = mount.listeners ?? 0;
+      setStatus(`${n} listener${n !== 1 ? "s" : ""} tuned in`);
+    } catch { /* ignore cors/offline */ }
+  }
+</script>
+</body>
+</html>
