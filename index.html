@@ -309,9 +309,8 @@
       })
       .catch(() => {});
 
-    const STREAM_HOST  = window.STREAM_HOST || "38.15.232.179";
-    const STREAM_URL   = `http://${STREAM_HOST}:8000/stream`;
-    const ICECAST_JSON = `http://${STREAM_HOST}:8000/status-json.xsl`;
+    const STREAM_URL   = "https://stream.beckdiditbetter.com/stream";
+    const ICECAST_JSON = "https://stream.beckdiditbetter.com/status-json.xsl";
 
     const audio     = new Audio();
     audio.preload   = "none";
