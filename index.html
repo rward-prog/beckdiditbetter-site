@@ -3,26 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Beck Did It Better — Music Comedy Podcast from Minnesota</title>
-  <meta name="description" content="Comedy podcast from Minnesota working through Rolling Stone's 500 Greatest Albums. We don't know the Beatles from the Beach Boys. 280+ episodes, streaming free 24/7." />
-  <meta name="keywords" content="Beck Did It Better, music podcast, comedy podcast, Minnesota podcast, St. Olaf, Rolling Stone top 500 albums, album review podcast, MN podcast, music comedy, streaming podcast" />
+  <title>Beck Did It Better — The Podcast That Proves Beck Did Songs Better Than the Originals</title>
+  <meta name="description" content="A comedy podcast arguing that Beck (the musician) did every song better than whoever recorded it first. Two Minnesota guys work through Rolling Stone's 500 Greatest Albums — 300+ episodes, streaming free 24/7." />
+  <meta name="keywords" content="Beck Did It Better, Beck musician podcast, music comedy podcast, Minnesota podcast, St. Olaf, Rolling Stone top 500 albums, album review podcast, Beck covers, Beck Hansen" />
   <link rel="canonical" href="https://beckdiditbetter.com" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Beck Did It Better — Music Comedy Podcast from Minnesota" />
-  <meta property="og:description" content="Comedy podcast from Minnesota working through Rolling Stone's 500 Greatest Albums. We don't know the Beatles from the Beach Boys. 280+ episodes streaming free." />
+  <meta property="og:title" content="Beck Did It Better — The Podcast That Proves Beck Did Songs Better Than the Originals" />
+  <meta property="og:description" content="A comedy podcast arguing that Beck (the musician) did every song better than whoever recorded it first. Two Minnesota guys work through Rolling Stone's 500 Greatest Albums — 300+ episodes streaming free." />
   <meta property="og:url" content="https://beckdiditbetter.com" />
   <meta property="og:image" content="https://pbcdn1.podbean.com/imglogo/image-logo/9118956/Podcast_cover_last_version_JPEG8yd69.jpg" />
   <meta property="og:image:width" content="1400" />
   <meta property="og:image:height" content="1400" />
+  <meta property="og:image:alt" content="Beck Did It Better podcast cover art" />
   <meta property="og:site_name" content="Beck Did It Better" />
+  <meta property="og:audio" content="http://38.15.232.179:8000/stream" />
+  <meta property="og:audio:type" content="audio/mpeg" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Beck Did It Better — Music Comedy Podcast from Minnesota" />
-  <meta name="twitter:description" content="St. Olaf alumni reviewing Rolling Stone's top 500 albums. Stream 300+ episodes free." />
+  <meta name="twitter:title" content="Beck Did It Better — Proof Beck Did Songs Better Than the Originals" />
+  <meta name="twitter:description" content="Comedy podcast where two Minnesota guys argue Beck (the musician) did every song better than whoever wrote it. Working through Rolling Stone's 500 Greatest Albums, 300+ episodes in." />
   <meta name="twitter:image" content="https://pbcdn1.podbean.com/imglogo/image-logo/9118956/Podcast_cover_last_version_JPEG8yd69.jpg" />
+  <meta name="twitter:image:alt" content="Beck Did It Better podcast cover art" />
 
   <!-- Podcast structured data -->
   <script type="application/ld+json">
@@ -30,12 +34,19 @@
     "@context": "https://schema.org",
     "@type": "PodcastSeries",
     "name": "Beck Did It Better",
-    "description": "Beck Did It Better is a comedy podcast out of Minnesota where we work through Rolling Stone magazine's 500 Greatest Albums of All Time — whether we're qualified to or not. We don't know the Beatles from the Beach Boys, and so far 280+ episodes in, it hasn't slowed us down. Each week we cover a new album, argue about songs we've never heard, recap the parts of our lives that have nothing to do with music, and occasionally give dating advice to our single friend. The advice has been bad enough that we're still recording on Friday nights. Call or text the Beck Line: 802-277-BECK (2325). We just want to be famous. Is that so much to ask?",
+    "alternateName": "Beck Did It Better Podcast",
+    "description": "Beck Did It Better is a comedy podcast out of Minnesota where two hosts argue that Beck (the musician) did every song better than whoever originally recorded it — while working through Rolling Stone magazine's 500 Greatest Albums of All Time. We don't know the Beatles from the Beach Boys, and so far 300+ episodes in, it hasn't slowed us down. Each week we cover a new album, argue about songs we've never heard, recap the parts of our lives that have nothing to do with music, and occasionally give dating advice to our single friend. The advice has been bad enough that we're still recording on Friday nights. Call or text the Beck Line: 802-277-BECK (2325). We just want to be famous. Is that so much to ask?",
     "url": "https://beckdiditbetter.com",
-    "image": "https://pbcdn1.podbean.com/imglogo/image-logo/9118956/Podcast_cover_last_version_JPEG8yd69.jpg",
+    "image": {
+      "@type": "ImageObject",
+      "url": "https://pbcdn1.podbean.com/imglogo/image-logo/9118956/Podcast_cover_last_version_JPEG8yd69.jpg",
+      "width": 1400,
+      "height": 1400
+    },
     "genre": ["Comedy", "Music", "Arts"],
-    "keywords": "music podcast, comedy podcast, Minnesota, St. Olaf, Rolling Stone top 500, album review",
+    "keywords": "Beck musician, music podcast, comedy podcast, Minnesota, St. Olaf, Rolling Stone top 500, album review, Beck covers, Beck Hansen",
     "inLanguage": "en-US",
+    "startDate": "2020",
     "author": {
       "@type": "Organization",
       "name": "Beck Did It Better",
@@ -44,9 +55,15 @@
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "USD"
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
     },
-    "webFeed": "https://feed.podbean.com/beckdiditbetter/feed.xml"
+    "webFeed": "https://feed.podbean.com/beckdiditbetter/feed.xml",
+    "sameAs": [
+      "https://beckdiditbetter.podbean.com",
+      "https://open.spotify.com/show/beckdiditbetter",
+      "https://podcasts.apple.com/search?term=beck+did+it+better"
+    ]
   }
   </script>
 
@@ -208,6 +225,35 @@
       transition: color .15s, border-color .15s;
     }
     .links a:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
+
+    /* ── Hit counter ── */
+    .counter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .counter-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    .counter-digits {
+      background: #0a0a0a;
+      border: 2px solid #333;
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-family: "Courier New", monospace;
+      font-size: 22px;
+      font-weight: 700;
+      color: #f04620;
+      letter-spacing: 4px;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.8), 0 0 10px rgba(240,70,32,0.2);
+      min-width: 140px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -237,7 +283,7 @@
         <span class="vol-icon">🔊</span>
       </div>
     </div>
-    <div class="status" id="status">280+ episodes · random shuffle · 24/7</div>
+    <div class="status" id="status">300+ episodes · random shuffle · 24/7</div>
   </div>
 
   <div class="links">
@@ -246,8 +292,21 @@
     <a href="https://podcasts.apple.com/search?term=beck+did+it+better" target="_blank" rel="noopener">🍎 Apple Podcasts</a>
   </div>
 
+  <div class="counter">
+    <div class="counter-label">visitors</div>
+    <div class="counter-digits" id="hit-count">000000</div>
+  </div>
+
   <script>
-    // Update STREAM_HOST to your public IP or domain once port 8000 is forwarded
+    // Hit counter via free api.countapi.xyz
+    fetch("https://api.countapi.xyz/hit/beckdiditbetter.com/visits")
+      .then(r => r.json())
+      .then(d => {
+        const n = String(d.value).padStart(6, "0");
+        document.getElementById("hit-count").textContent = n;
+      })
+      .catch(() => {});
+
     const STREAM_HOST  = window.STREAM_HOST || "38.15.232.179";
     const STREAM_URL   = `http://${STREAM_HOST}:8000/stream`;
     const ICECAST_JSON = `http://${STREAM_HOST}:8000/status-json.xsl`;
