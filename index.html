@@ -3,27 +3,269 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Beck Did It Better</title>
+  <title>Beck Did It Better — Comedy Podcast Radio</title>
+  <meta name="description" content="A comedy podcast where we discuss the top 500 albums of all time as decided by Rolling Stone magazine." />
+  <meta property="og:title" content="Beck Did It Better" />
   <meta property="og:image" content="https://pbcdn1.podbean.com/imglogo/image-logo/9118956/Podcast_cover_last_version_JPEG8yd69.jpg" />
   <link rel="icon" href="https://pbcdn1.podbean.com/imglogo/image-logo/9118956/Podcast_cover_last_version_JPEG8yd69.jpg" type="image/jpeg" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --navy:    #1e1b6a;
+      --navy-dk: #13114a;
+      --orange:  #f04620;
+      --orange-lt: #ff6a47;
+      --white:   #ffffff;
+      --dim:     rgba(255,255,255,0.55);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      background: #1e1b6a;
+      background: var(--navy-dk);
+      color: var(--white);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      gap: 36px;
+    }
+
+    /* ── Coming soon banner ── */
+    .coming-soon {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(240, 70, 32, 0.15);
+      border: 1px solid rgba(240, 70, 32, 0.4);
+      color: var(--orange-lt);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border-radius: 100px;
+    }
+    .cs-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--orange);
+      animation: blink 1.6s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+    /* ── Logo ── */
+    .logo img {
+      width: min(300px, 80vw);
+      height: min(300px, 80vw);
+      border-radius: 20px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.55);
+      display: block;
+    }
+
+    /* ── Player card ── */
+    .player {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 24px 28px;
+      width: min(420px, 100%);
+    }
+
+    .now-playing {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .np-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--orange);
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
     }
-    img {
-      width: min(540px, 90vw);
-      height: min(540px, 90vw);
-      border-radius: 24px;
-      box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+    .np-label { font-size: 10px; font-weight: 700; color: var(--dim); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px; }
+    .np-title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px; }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
     }
+
+    .play-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: none;
+      background: var(--orange);
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .12s, background .15s;
+      flex-shrink: 0;
+    }
+    .play-btn:hover { background: var(--orange-lt); transform: scale(1.06); }
+    .play-btn:active { transform: scale(0.95); }
+
+    .vol-row { display: flex; align-items: center; gap: 8px; flex: 1; }
+    .vol-icon { color: var(--dim); font-size: 14px; }
+    input[type=range] {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.15);
+      cursor: pointer;
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--orange);
+    }
+
+    .status {
+      font-size: 12px;
+      color: var(--dim);
+      text-align: center;
+      min-height: 16px;
+    }
+    .status.err { color: #ff7070; }
+
+    /* ── Subscribe links ── */
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .links a {
+      color: var(--dim);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 100px;
+      transition: color .15s, border-color .15s;
+    }
+    .links a:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
   </style>
 </head>
 <body>
-  <img src="https://pbcdn1.podbean.com/imglogo/image-logo/9118956/Podcast_cover_last_version_JPEG8yd69.jpg" alt="Beck Did It Better" />
+
+  <div class="coming-soon">
+    <div class="cs-dot"></div>
+    Full site coming soon
+  </div>
+
+  <div class="logo">
+    <img src="https://pbcdn1.podbean.com/imglogo/image-logo/9118956/Podcast_cover_last_version_JPEG8yd69.jpg" alt="Beck Did It Better" />
+  </div>
+
+  <div class="player">
+    <div class="now-playing">
+      <div class="np-icon">🎵</div>
+      <div>
+        <div class="np-label">Now Playing</div>
+        <div class="np-title" id="np-title">Press play to tune in</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="play-btn" id="play-btn">▶</button>
+      <div class="vol-row">
+        <span class="vol-icon">🔈</span>
+        <input type="range" id="volume" min="0" max="1" step="0.02" value="0.85" />
+        <span class="vol-icon">🔊</span>
+      </div>
+    </div>
+    <div class="status" id="status">300+ episodes · random shuffle · 24/7</div>
+  </div>
+
+  <div class="links">
+    <a href="https://beckdiditbetter.podbean.com" target="_blank" rel="noopener">🎙️ Podbean</a>
+    <a href="https://open.spotify.com/show/beckdiditbetter" target="_blank" rel="noopener">🎧 Spotify</a>
+    <a href="https://podcasts.apple.com/search?term=beck+did+it+better" target="_blank" rel="noopener">🍎 Apple Podcasts</a>
+  </div>
+
+  <script>
+    // Update STREAM_HOST to your public IP or domain once port 8000 is forwarded
+    const STREAM_HOST  = window.STREAM_HOST || "192.168.0.171";
+    const STREAM_URL   = `http://${STREAM_HOST}:8000/stream`;
+    const ICECAST_JSON = `http://${STREAM_HOST}:8000/status-json.xsl`;
+
+    const audio     = new Audio();
+    audio.preload   = "none";
+    const playBtn   = document.getElementById("play-btn");
+    const npTitle   = document.getElementById("np-title");
+    const statusEl  = document.getElementById("status");
+    const volSlider = document.getElementById("volume");
+
+    let playing = false, pollTimer = null;
+    audio.volume = parseFloat(volSlider.value);
+
+    playBtn.addEventListener("click", () => playing ? stop() : start());
+    volSlider.addEventListener("input", () => { audio.volume = parseFloat(volSlider.value); });
+
+    function start() {
+      audio.src = STREAM_URL + "?t=" + Date.now();
+      audio.play()
+        .then(() => {
+          playing = true;
+          playBtn.textContent = "⏸";
+          setStatus("Connected · all episodes shuffled");
+          fetchNP();
+          pollTimer = setInterval(fetchNP, 9000);
+        })
+        .catch(() => setStatus("Stream not reachable — check back soon.", true));
+    }
+
+    function stop() {
+      audio.pause(); audio.src = "";
+      playing = false;
+      playBtn.textContent = "▶";
+      clearInterval(pollTimer);
+      npTitle.textContent = "Press play to tune in";
+      setStatus("300+ episodes · random shuffle · 24/7");
+    }
+
+    audio.addEventListener("error", () => {
+      if (!playing) return;
+      setStatus("Stream dropped — reconnecting in 5s…", true);
+      stop(); setTimeout(start, 5000);
+    });
+
+    function setStatus(msg, err = false) {
+      statusEl.textContent = msg;
+      statusEl.className = "status" + (err ? " err" : "");
+    }
+
+    async function fetchNP() {
+      try {
+        const d = await fetch(ICECAST_JSON).then(r => r.json());
+        const src = d?.icestats?.source;
+        if (!src) return;
+        const m = Array.isArray(src) ? src.find(s => s.listenurl?.includes("/stream")) : src;
+        if (m?.title) npTitle.textContent = m.title;
+        const n = m?.listeners ?? 0;
+        setStatus(`${n} listener${n !== 1 ? "s" : ""} tuned in`);
+      } catch {}
+    }
+  </script>
 </body>
 </html>
