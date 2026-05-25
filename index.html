@@ -278,6 +278,27 @@
     }
     .links a:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
 
+    /* ── Tagline ── */
+    .tagline {
+      text-align: center;
+      max-width: 380px;
+      line-height: 1.5;
+    }
+    .tagline p {
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+    }
+    .tagline p strong {
+      color: var(--white);
+      font-weight: 700;
+    }
+    .tagline .sub {
+      font-size: 12px;
+      color: var(--dim);
+      margin-top: 5px;
+    }
+
     /* ── Counters ── */
     .counter {
       display: flex;
@@ -317,6 +338,11 @@
 
   <div class="logo">
     <img src="/cover.jpg" alt="Beck Did It Better" />
+  </div>
+
+  <div class="tagline">
+    <p>We've recorded <strong>300+ episodes</strong> arguing about Beck.<br>One is playing right now. Could be a good one.</p>
+    <p class="sub">Random shuffle · 24 hours a day · 7 days a week · whether you like it or not</p>
   </div>
 
   <div class="player">
