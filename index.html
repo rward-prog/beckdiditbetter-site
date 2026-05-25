@@ -133,35 +133,74 @@
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 20px;
-      padding: 24px 28px;
-      width: min(420px, 100%);
+      padding: 28px;
+      width: min(460px, 100%);
     }
 
-    .now-playing {
+    .np-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--dim);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 7px;
     }
-    .np-icon {
-      width: 40px;
-      height: 40px;
-      background: var(--orange);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
+    .np-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--dim);
       flex-shrink: 0;
     }
-    .np-label { font-size: 10px; font-weight: 700; color: var(--dim); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px; }
-    .np-title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px; }
+    .np-dot.live { background: #22c55e; animation: blink 1.4s infinite; }
+
+    .ep-title {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.3;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+      min-height: 52px;
+    }
+
+    .ep-date {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--orange);
+      margin-bottom: 20px;
+      min-height: 18px;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      margin-bottom: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      height: 6px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--orange);
+      border-radius: 4px;
+      width: 0%;
+      transition: width 1s linear;
+    }
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--dim);
+      margin-bottom: 20px;
+    }
 
     .controls {
       display: flex;
       align-items: center;
       gap: 14px;
-      margin-bottom: 16px;
+      margin-bottom: 0;
     }
 
     .play-btn {
@@ -206,6 +245,7 @@
       color: var(--dim);
       text-align: center;
       min-height: 16px;
+      margin-top: 14px;
     }
     .status.err { color: #ff7070; }
 
@@ -228,7 +268,7 @@
     }
     .links a:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
 
-    /* ── Hit counter ── */
+    /* ── Counters ── */
     .counter {
       display: flex;
       flex-direction: column;
@@ -270,12 +310,15 @@
   </div>
 
   <div class="player">
-    <div class="now-playing">
-      <div class="np-icon">🎵</div>
-      <div>
-        <div class="np-label">Now Playing</div>
-        <div class="np-title" id="np-title">Press play to tune in</div>
-      </div>
+    <div class="np-label"><span class="np-dot" id="np-dot"></span>Now Playing</div>
+    <div class="ep-title" id="ep-title">Press play to tune in</div>
+    <div class="ep-date" id="ep-date"></div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <div class="progress-labels">
+      <span id="elapsed">—</span>
+      <span id="ep-remaining">—</span>
     </div>
     <div class="controls">
       <button class="play-btn" id="play-btn">▶</button>
@@ -299,31 +342,150 @@
     <div class="counter-digits" id="hit-count">000000</div>
   </div>
 
+  <div class="counter">
+    <div class="counter-label">you've listened</div>
+    <div class="counter-digits" id="total-listened">0 min</div>
+  </div>
+
   <script>
-    // Hit counter via free api.countapi.xyz
-    fetch("https://api.countapi.xyz/hit/beckdiditbetter.com/visits")
+    // Hit counter via counterapi.dev
+    fetch("https://api.counterapi.dev/v1/beckdiditbetter/visits/up")
       .then(r => r.json())
       .then(d => {
-        const n = String(d.value).padStart(6, "0");
-        document.getElementById("hit-count").textContent = n;
+        document.getElementById("hit-count").textContent = String(d.count).padStart(6, "0");
       })
       .catch(() => {});
 
     const STREAM_URL   = "https://stream.beckdiditbetter.com/stream";
     const ICECAST_JSON = "https://stream.beckdiditbetter.com/status-json.xsl";
+    const INFO_URL     = "https://info.beckdiditbetter.com/info";
 
-    const audio     = new Audio();
-    audio.preload   = "none";
-    const playBtn   = document.getElementById("play-btn");
-    const npTitle   = document.getElementById("np-title");
-    const statusEl  = document.getElementById("status");
-    const volSlider = document.getElementById("volume");
+    let audio = new Audio();
+    audio.preload = "none";
 
-    let playing = false, pollTimer = null;
+    const playBtn       = document.getElementById("play-btn");
+    const epTitle       = document.getElementById("ep-title");
+    const epDate        = document.getElementById("ep-date");
+    const npDot         = document.getElementById("np-dot");
+    const progressBar   = document.getElementById("progress-bar");
+    const elapsedEl     = document.getElementById("elapsed");
+    const remainingEl   = document.getElementById("ep-remaining");
+    const statusEl      = document.getElementById("status");
+    const volSlider     = document.getElementById("volume");
+    const totalListenEl = document.getElementById("total-listened");
+
+    let playing = false, pollTimer = null, infoTimer = null, tickTimer = null;
+    let currentTitle = null;
+    let serverElapsed = 0, serverDuration = 0, serverFetchedAt = null;
+    let nextAudio = null, preloading = false, stallTimer = null;
+    let totalListenedSecs = parseInt(localStorage.getItem("bdibTotalSecs") || "0", 10);
+
     audio.volume = parseFloat(volSlider.value);
+    updateTotalCounter();
+    audio.addEventListener("error", onError);
+    audio.addEventListener("waiting", onWaiting);
+    audio.addEventListener("playing", onResumed);
 
     playBtn.addEventListener("click", () => playing ? stop() : start());
     volSlider.addEventListener("input", () => { audio.volume = parseFloat(volSlider.value); });
+
+    function fmtTime(secs) {
+      secs = Math.max(0, Math.floor(secs));
+      const h = Math.floor(secs / 3600);
+      const m = Math.floor((secs % 3600) / 60);
+      const s = secs % 60;
+      if (h > 0) return `${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+      return `${m}:${String(s).padStart(2,"0")}`;
+    }
+
+    function fmtRemaining(secs) {
+      secs = Math.max(0, Math.floor(secs));
+      const totalMins = Math.ceil(secs / 60);
+      const h = Math.floor(totalMins / 60);
+      const m = totalMins % 60;
+      if (h > 0) return `${h}h ${m}m left`;
+      return `${m}m left`;
+    }
+
+    function updateTotalCounter() {
+      const mins = Math.floor(totalListenedSecs / 60);
+      if (mins < 60) {
+        totalListenEl.textContent = `${mins} min`;
+      } else {
+        const h = Math.floor(mins / 60);
+        const m = mins % 60;
+        totalListenEl.textContent = `${h}h ${m}m`;
+      }
+    }
+
+    function tick() {
+      if (!playing) return;
+
+      totalListenedSecs++;
+      localStorage.setItem("bdibTotalSecs", totalListenedSecs);
+      updateTotalCounter();
+
+      if (!serverFetchedAt || !serverDuration) return;
+      const elapsed = serverElapsed + (Date.now() - serverFetchedAt) / 1000;
+      const remaining = Math.max(0, serverDuration - elapsed);
+      elapsedEl.textContent = fmtTime(elapsed);
+      remainingEl.textContent = fmtRemaining(remaining);
+      progressBar.style.width = Math.min(100, (elapsed / serverDuration) * 100) + "%";
+      maybePreload(remaining);
+    }
+
+    // Start a silent second connection ~60s before end so transition is already buffered
+    function maybePreload(remaining) {
+      if (preloading || !playing || remaining <= 0 || remaining > 60) return;
+      preloading = true;
+      nextAudio = new Audio();
+      nextAudio.volume = 0;
+      nextAudio.src = STREAM_URL + "?t=" + Date.now();
+      nextAudio.play().catch(() => nextAudio && nextAudio.load());
+    }
+
+    function swapToPreloaded() {
+      if (!nextAudio) return;
+      const vol = audio.volume;
+      audio.removeEventListener("error", onError);
+      audio.removeEventListener("waiting", onWaiting);
+      audio.removeEventListener("playing", onResumed);
+      audio.pause();
+      audio.src = "";
+      audio = nextAudio;
+      audio.volume = vol;
+      if (audio.paused) audio.play().catch(() => {});
+      audio.addEventListener("error", onError);
+      audio.addEventListener("waiting", onWaiting);
+      audio.addEventListener("playing", onResumed);
+      nextAudio = null;
+      preloading = false;
+    }
+
+    function onError() {
+      if (!playing) return;
+      setStatus("Stream dropped — reconnecting…", true);
+      const vol = audio.volume;
+      audio.src = "";
+      setTimeout(() => {
+        if (!playing) return;
+        audio.src = STREAM_URL + "?t=" + Date.now();
+        audio.volume = vol;
+        audio.play().catch(() => {});
+      }, 2000);
+    }
+
+    function onWaiting() {
+      if (!playing) return;
+      clearTimeout(stallTimer);
+      stallTimer = setTimeout(() => {
+        if (playing && audio.readyState < 3) onError();
+      }, 6000);
+    }
+
+    function onResumed() {
+      clearTimeout(stallTimer);
+    }
 
     function start() {
       audio.src = STREAM_URL + "?t=" + Date.now();
@@ -331,32 +493,44 @@
         .then(() => {
           playing = true;
           playBtn.textContent = "⏸";
+          npDot.classList.add("live");
           setStatus("Connected · all episodes shuffled");
           fetchNP();
+          fetchInfo();
           pollTimer = setInterval(fetchNP, 9000);
+          infoTimer = setInterval(fetchInfo, 5000);
+          tickTimer = setInterval(tick, 1000);
         })
         .catch(() => setStatus("Stream not reachable — check back soon.", true));
     }
 
     function stop() {
+      clearTimeout(stallTimer);
       audio.pause(); audio.src = "";
+      if (nextAudio) { nextAudio.pause(); nextAudio.src = ""; nextAudio = null; }
+      preloading = false;
       playing = false;
       playBtn.textContent = "▶";
+      npDot.classList.remove("live");
       clearInterval(pollTimer);
-      npTitle.textContent = "Press play to tune in";
+      clearInterval(infoTimer);
+      clearInterval(tickTimer);
+      epTitle.textContent = "Press play to tune in";
+      epDate.textContent = "";
+      elapsedEl.textContent = "—";
+      remainingEl.textContent = "—";
+      progressBar.style.width = "0%";
+      currentTitle = null;
+      serverElapsed = 0; serverDuration = 0; serverFetchedAt = null;
       setStatus("300+ episodes · random shuffle · 24/7");
     }
-
-    audio.addEventListener("error", () => {
-      if (!playing) return;
-      setStatus("Stream dropped — reconnecting in 5s…", true);
-      stop(); setTimeout(start, 5000);
-    });
 
     function setStatus(msg, err = false) {
       statusEl.textContent = msg;
       statusEl.className = "status" + (err ? " err" : "");
     }
+
+    fetchNP(); // show current episode on page load
 
     async function fetchNP() {
       try {
@@ -364,9 +538,44 @@
         const src = d?.icestats?.source;
         if (!src) return;
         const m = Array.isArray(src) ? src.find(s => s.listenurl?.includes("/stream")) : src;
-        if (m?.title) npTitle.textContent = m.title;
+        if (!m?.title) return;
+
+        const raw = m.title;
+        const sep = raw.indexOf("  ·  aired ");
+        let title, date;
+        if (sep !== -1) {
+          title = raw.slice(0, sep);
+          date = "Aired " + raw.slice(sep + 11);
+        } else {
+          title = raw;
+          date = "";
+        }
+
+        if (raw !== currentTitle) {
+          currentTitle = raw;
+          serverElapsed = 0; serverDuration = 0; serverFetchedAt = null;
+          if (playing) {
+            swapToPreloaded(); // switch to pre-buffered connection if ready
+            fetchInfo();
+          }
+        }
+
+        epTitle.textContent = title;
+        epDate.textContent = date;
+
         const n = m?.listeners ?? 0;
-        setStatus(`${n} listener${n !== 1 ? "s" : ""} tuned in`);
+        if (playing) setStatus(`${n} listener${n !== 1 ? "s" : ""} tuned in`);
+      } catch {}
+    }
+
+    async function fetchInfo() {
+      try {
+        const d = await fetch(INFO_URL).then(r => r.json());
+        if (d.duration > 0) {
+          serverElapsed   = d.elapsed;
+          serverDuration  = d.duration;
+          serverFetchedAt = Date.now();
+        }
       } catch {}
     }
   </script>
