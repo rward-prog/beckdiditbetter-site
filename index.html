@@ -191,9 +191,19 @@
     .progress-labels {
       display: flex;
       justify-content: space-between;
-      font-size: 11px;
-      color: var(--dim);
+      align-items: baseline;
       margin-bottom: 20px;
+    }
+    .progress-labels .elapsed {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--orange-lt);
+      letter-spacing: 0.5px;
+    }
+    .progress-labels .remaining {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.75);
     }
 
     .controls {
@@ -317,8 +327,8 @@
       <div class="progress-bar" id="progress-bar"></div>
     </div>
     <div class="progress-labels">
-      <span id="elapsed">—</span>
-      <span id="ep-remaining">—</span>
+      <span id="elapsed" class="elapsed">—</span>
+      <span id="ep-remaining" class="remaining">—</span>
     </div>
     <div class="controls">
       <button class="play-btn" id="play-btn">▶</button>
